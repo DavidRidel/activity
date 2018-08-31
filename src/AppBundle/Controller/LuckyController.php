@@ -5,12 +5,19 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\BrowserKit\Response;
+
+/**
+ *
+ * @Route (name="lucky_")
+ *
+ */
 
 class LuckyController extends Controller
 {
 
     /**
-     * @Route("/lucky", name="lucky_index")
+     * @Route("/lucky", name="index")
      */
     public function indexAction()
     {
@@ -21,15 +28,21 @@ class LuckyController extends Controller
     }
 
     /**
-     * @Route("/lucky/number", name="lucky_number")
+     * @Route("/lucky/number/{max}", name="number")
      */
-    public function numberAction()
+    public function numberAction($max)
     {
-        $number = random_int(0, 100);
 
-        return new Response(
-            '<html><body>Lucky number: '.$number.'</body></html>'
-        );
+        if($max > 50)
+            $this->createNotFoundException('La valeur du max est trop élevée');
+        else
+            $number = random_int(0, $max);
+
+
+
+        return $this->render('lucky/number.html.twig', [
+            'number' => $number,
+        ]);
     }
 
 }
